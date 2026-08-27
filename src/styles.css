@@ -491,3 +491,313 @@ input:disabled{
   opacity:1;
   cursor:not-allowed;
 }
+
+/* v19 — viewport-fit layout: no vertical page scrolling on iPad / laptop / mobile */
+html,body,#root{
+  width:100%;
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+}
+body{
+  height:100dvh;
+  min-height:100dvh;
+  overflow:hidden;
+}
+#root{
+  height:100dvh;
+  min-height:100dvh;
+}
+.page-shell{
+  width:100%;
+  height:100dvh;
+  min-height:0;
+  padding:0 clamp(12px,4vw,52px);
+  overflow:hidden;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+}
+.app-header{
+  height:clamp(58px,8.2dvh,78px);
+  min-height:0;
+  margin:0 !important;
+  flex:0 0 auto;
+}
+.brand-logo{width:clamp(50px,6.5dvh,66px)}
+.web-surface{
+  min-height:0;
+  max-height:100%;
+  margin:clamp(10px,2.4dvh,24px) auto clamp(10px,2.8dvh,28px);
+}
+
+/* Intro / QR: always fit inside the remaining viewport */
+.page-shell:has(.intro-surface) .web-surface,
+.page-shell:has(.qr-surface) .web-surface{
+  align-self:center;
+  height:min(620px,calc(100% - clamp(20px,4dvh,44px)));
+  max-height:calc(100% - clamp(20px,4dvh,44px));
+  transform:none !important;
+}
+.intro-surface,.qr-surface{
+  min-height:0 !important;
+  grid-template-columns:minmax(0,1fr) minmax(300px,390px);
+  gap:clamp(28px,5vw,64px);
+  padding:clamp(24px,5dvh,48px) clamp(26px,4.5vw,58px);
+}
+.entry-card,.qr-card{
+  min-height:0;
+  padding:clamp(22px,4dvh,32px);
+}
+.intro-copy h1,.qr-left h1{font-size:clamp(34px,5.2dvh,48px)}
+.kicker{margin-bottom:clamp(10px,2dvh,20px)}
+.body-copy{margin-top:clamp(14px,2.7dvh,28px)}
+.helper{margin-top:clamp(18px,4dvh,34px)}
+.entry-card form{margin-top:clamp(18px,3.4dvh,28px)}
+.entry-card input{height:clamp(48px,6.5dvh,58px)}
+.qr-left .flow-line{margin-top:clamp(24px,6dvh,52px)}
+.qr-box{
+  width:clamp(150px,25dvh,230px);
+  height:clamp(150px,25dvh,230px);
+  margin:clamp(16px,3dvh,34px) auto clamp(8px,2dvh,18px);
+}
+
+/* Game: header + one fixed viewport row. No min-height accumulation. */
+.game-page{
+  height:100dvh;
+  min-height:0;
+  padding-bottom:0;
+}
+.game-layout{
+  width:min(1240px,100%);
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+  margin:0 auto;
+  padding:clamp(10px,2.4dvh,24px) 0 clamp(12px,2.8dvh,28px);
+  grid-template-columns:minmax(230px,360px) minmax(0,1fr);
+  gap:clamp(20px,4.6vw,72px);
+  align-items:center;
+}
+.phone-stage{
+  height:100%;
+  min-height:0;
+}
+.phone-shell{
+  width:auto;
+  height:min(100%,736px);
+  max-width:100%;
+  aspect-ratio:360 / 736;
+}
+.keyword-panel{
+  width:100%;
+  height:min(700px,100%);
+  min-height:0;
+  max-height:100%;
+  padding:clamp(20px,4dvh,38px) clamp(20px,3.4vw,42px) clamp(18px,3.2dvh,30px);
+  overflow:hidden;
+}
+.panel-top h1{font-size:clamp(23px,3.6dvh,34px)}
+.panel-top p{margin-top:clamp(5px,1.4dvh,12px);font-size:clamp(12px,1.8dvh,15px)}
+.selected-count{padding-top:clamp(4px,1.4dvh,12px)}
+.panel-rule{margin:clamp(12px,2.7dvh,28px) 0 clamp(12px,3.2dvh,34px)}
+.keyword-grid{
+  min-height:0;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:clamp(5px,1.25dvh,12px) clamp(6px,1vw,14px);
+  align-content:start;
+}
+.keyword-grid button{
+  height:clamp(31px,5.2dvh,48px);
+  min-height:0;
+  padding:0 4px;
+  font-size:clamp(11px,1.7dvh,14px);
+}
+.panel-actions{gap:clamp(8px,1.5vw,16px);margin-top:clamp(10px,2.5dvh,24px)}
+.panel-actions .btn{height:clamp(40px,5.8dvh,54px)}
+.save-error{margin-top:clamp(5px,1.3dvh,12px);font-size:12px}
+
+/* Completion */
+.complete-wrap{
+  width:min(1280px,100%);
+  height:100%;
+  min-height:0;
+  margin:0 auto;
+  padding:clamp(12px,3dvh,30px) 0;
+  overflow:hidden;
+}
+.complete-card{
+  max-height:100%;
+  padding:clamp(28px,5dvh,48px) clamp(24px,5vw,56px);
+}
+.check-circle{
+  width:clamp(70px,11dvh,100px);
+  height:clamp(70px,11dvh,100px);
+  margin-bottom:clamp(15px,3dvh,28px);
+}
+.countdown{margin-top:clamp(20px,4dvh,36px)}
+
+/* iPad portrait and compact tablets: keep the game side-by-side instead of stacking. */
+@media(max-width:820px){
+  .page-shell{
+    padding-inline:clamp(12px,2.6vw,20px);
+    overflow:hidden;
+  }
+  .app-header{height:clamp(58px,7.5dvh,70px)}
+
+  .intro-surface,.qr-surface{
+    grid-template-columns:minmax(0,1fr) minmax(250px,330px);
+    gap:clamp(18px,3vw,30px);
+    padding:clamp(22px,3.5dvh,34px) clamp(20px,3vw,32px);
+    align-items:center;
+  }
+  .intro-copy h1,.qr-left h1{font-size:clamp(30px,4.4dvh,40px)}
+  .entry-card,.qr-card{width:100%;padding:clamp(20px,3dvh,28px)}
+  .entry-card h2,.qr-card h2{font-size:clamp(24px,3.2dvh,29px)}
+
+  .game-layout{
+    width:100%;
+    grid-template-columns:minmax(190px,30%) minmax(0,1fr);
+    gap:clamp(14px,2.7vw,24px);
+    padding:clamp(8px,1.8dvh,16px) 0 clamp(10px,2dvh,18px);
+  }
+  .phone-stage{
+    width:100%;
+    height:100%;
+    margin:0;
+  }
+  .phone-shell{
+    width:auto;
+    height:min(100%,620px);
+  }
+  .keyword-panel{
+    height:min(620px,100%);
+    min-height:0;
+    padding:clamp(16px,2.5dvh,24px) clamp(14px,2.6vw,24px);
+  }
+  .panel-top{gap:10px}
+  .panel-top h1{font-size:clamp(20px,2.8dvh,25px)}
+  .panel-top p{font-size:clamp(11px,1.55dvh,13px)}
+  .selected-count{font-size:11px}
+  .panel-rule{margin:clamp(9px,1.8dvh,16px) 0}
+  .keyword-grid{gap:clamp(4px,.8dvh,7px)}
+  .keyword-grid button{height:clamp(29px,4.3dvh,38px);font-size:clamp(10px,1.35dvh,12px)}
+  .panel-actions{margin-top:clamp(8px,1.7dvh,14px);gap:8px}
+  .panel-actions .btn{height:clamp(36px,5dvh,44px);font-size:12px}
+  .complete-wrap{height:100%;min-height:0;padding:20px 0}
+}
+
+/* Phones / very narrow windows: compact vertical composition, still viewport-bound. */
+@media(max-width:620px){
+  .page-shell{padding-inline:10px}
+  .app-header{height:58px}
+  .header-badge{height:28px}
+
+  .page-shell:has(.intro-surface) .web-surface,
+  .page-shell:has(.qr-surface) .web-surface{
+    height:calc(100% - 14px);
+    max-height:calc(100% - 14px);
+    margin:7px auto;
+  }
+  .intro-surface,.qr-surface{
+    display:grid;
+    grid-template-columns:1fr;
+    grid-template-rows:auto minmax(0,1fr);
+    gap:clamp(10px,2dvh,18px);
+    padding:clamp(14px,2.5dvh,22px) 16px;
+    overflow:hidden;
+  }
+  .intro-copy,.qr-left{align-self:start}
+  .intro-copy h1,.qr-left h1{font-size:clamp(27px,5dvh,34px)}
+  .body-copy{font-size:13px;line-height:1.45;margin-top:8px}
+  .qr-left .flow-line{margin-top:10px;font-size:11px}
+  .entry-card,.qr-card{
+    align-self:stretch;
+    min-height:0;
+    padding:clamp(14px,2.2dvh,20px);
+  }
+  .entry-card h2,.qr-card h2{font-size:clamp(21px,3.6dvh,26px)}
+  .helper{margin-top:clamp(8px,1.8dvh,14px);font-size:12px}
+  .entry-card form{margin-top:clamp(10px,2dvh,16px)}
+  .entry-card input{height:44px}
+  .entry-card .btn,.qr-card .btn{height:42px;margin-top:10px}
+  .microcopy{margin-top:9px;font-size:10px}
+  .qr-box{width:clamp(100px,18dvh,150px);height:clamp(100px,18dvh,150px);margin:8px auto 4px}
+  .qr-url{font-size:11px;margin-bottom:5px}
+
+  .game-layout{
+    grid-template-columns:1fr;
+    grid-template-rows:minmax(0,38%) minmax(0,62%);
+    gap:8px;
+    padding:7px 0 9px;
+  }
+  .phone-stage{
+    width:100%;
+    height:100%;
+  }
+  .phone-shell{
+    width:auto;
+    height:100%;
+    max-width:100%;
+    border-radius:28px;
+    padding:6px;
+  }
+  .phone-shell::before{inset:4px;border-radius:25px}
+  .phone-screen{border-radius:22px}
+  .dynamic-island{top:6px;width:62px;height:17px}
+  .status-bar{height:32px;flex-basis:32px;padding:9px 13px 0}
+  .status-time{font-size:9px;width:36px}
+  .status-icons{transform:scale(.7);transform-origin:right top}
+  .ig-header{height:38px;flex-basis:38px;grid-template-columns:24px 1fr 50px;padding:0 8px}
+  .ig-header strong{font-size:11px}
+  .ig-actions{gap:5px;transform:scale(.72);transform-origin:right center}
+  .ig-tabs{height:28px;flex-basis:28px;transform:none}
+  .ig-tabs svg{width:13px;height:13px}.reels-glyph{font-size:13px}
+  .ig-bottom{height:38px;flex-basis:38px;padding:0 8px 5px}
+  .ig-bottom svg{width:15px;height:15px}.ig-avatar{width:16px;height:16px}
+  .home-indicator{width:70px;height:3px;bottom:3px}
+
+  .keyword-panel{
+    height:100%;
+    min-height:0;
+    padding:10px 10px 9px;
+    border-radius:16px;
+  }
+  .panel-top{flex-direction:row;align-items:flex-start;gap:6px}
+  .panel-top h1{font-size:clamp(16px,2.6dvh,20px);white-space:nowrap}
+  .panel-top p{font-size:10px;margin-top:3px}
+  .selected-count{font-size:10px;white-space:nowrap}
+  .panel-rule{margin:6px 0}
+  .keyword-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+  .keyword-grid button{height:clamp(25px,3.8dvh,32px);font-size:clamp(8px,1.25dvh,10px);border-radius:8px;padding:0 1px}
+  .panel-actions{grid-template-columns:1fr 1.12fr;gap:6px;margin-top:6px}
+  .panel-actions .btn{height:34px;font-size:10px;padding:0 7px;border-radius:9px}
+  .save-error{margin-top:3px;font-size:9px}
+  .complete-card{padding:24px 18px}
+  .complete-card h1{font-size:clamp(28px,5dvh,36px)}
+}
+
+/* Short-height devices (small laptop windows, landscape tablets) */
+@media(max-height:720px){
+  .app-header{height:58px}
+  .game-layout{padding:7px 0 9px}
+  .keyword-panel{padding-top:16px;padding-bottom:14px}
+  .panel-rule{margin:9px 0}
+  .keyword-grid{gap:4px 7px}
+  .keyword-grid button{height:30px;font-size:11px}
+  .panel-actions{margin-top:8px}
+  .panel-actions .btn{height:38px}
+  .intro-surface,.qr-surface{padding-top:22px;padding-bottom:22px}
+  .helper{margin-top:15px}
+  .entry-card form{margin-top:14px}
+}
+
+/* Extra-short landscape phones: prioritize the actual interaction panel. */
+@media(max-width:620px) and (max-height:700px){
+  .game-layout{grid-template-rows:minmax(0,31%) minmax(0,69%)}
+  .panel-top h1{font-size:15px}
+  .panel-top p{display:none}
+  .keyword-grid button{height:24px;font-size:8px}
+  .panel-actions .btn{height:30px}
+  .intro-copy .body-copy,.qr-left .body-copy{display:none}
+  .kicker{margin-bottom:6px}
+}
