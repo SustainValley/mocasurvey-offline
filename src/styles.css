@@ -801,3 +801,222 @@ body{
   .intro-copy .body-copy,.qr-left .body-copy{display:none}
   .kicker{margin-bottom:6px}
 }
+
+/* =========================================================
+   CAFE MOCA POPUP — sharper event-system visual refresh
+   Lucky Draw 화면과 같은 각진 UI 결을 맞춘 오프라인 버전
+   ========================================================= */
+
+:root{
+  --moca-border:#d9dce0;
+  --moca-border-strong:#252629;
+  --moca-panel:#ffffff;
+  --moca-soft:#f7f7f8;
+}
+
+/* 둥근 pill/card 느낌을 줄이고 팝업 운영 화면처럼 각지게 */
+.header-badge{
+  border-radius:4px;
+  border-color:var(--moca-border);
+  padding-inline:18px;
+  background:#fff;
+  letter-spacing:.015em;
+}
+
+.web-surface{
+  border-radius:6px;
+  border:1.5px solid var(--moca-border-strong);
+  box-shadow:none;
+  background:rgba(255,255,255,.98);
+}
+
+/* 첫 화면을 가장 크게 정리 */
+.intro-surface{
+  grid-template-columns:minmax(0,1.08fr) minmax(360px,.82fr);
+  gap:clamp(48px,6vw,84px);
+}
+
+.intro-copy{
+  padding-left:6px;
+}
+
+.intro-copy .kicker{
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  margin-bottom:24px;
+  padding:0 10px;
+  border:1px solid var(--moca-border-strong);
+  background:#fff;
+  color:var(--ink);
+  font-size:12px;
+  letter-spacing:.04em;
+}
+
+.intro-copy h1{
+  font-weight:850;
+  line-height:1.04;
+}
+
+.intro-copy .body-copy{
+  max-width:460px;
+  padding-top:22px;
+  border-top:1px solid #e2e4e7;
+  font-size:16px;
+}
+
+.entry-card,
+.qr-card{
+  border-radius:4px;
+  border:1.5px solid var(--moca-border-strong);
+  box-shadow:none;
+}
+
+.entry-card{
+  padding:34px 34px 30px;
+}
+
+.entry-card::before{
+  content:"STEP 01";
+  display:block;
+  width:max-content;
+  margin:0 0 18px auto;
+  color:#92969c;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.entry-card > .kicker{
+  margin-bottom:12px;
+  color:#7b7f85;
+  font-size:13px;
+}
+
+.entry-card h2{
+  font-size:30px;
+}
+
+.helper{
+  margin-top:28px;
+  padding-top:18px;
+  border-top:1px solid #eceeef;
+}
+
+.entry-card form{
+  margin-top:24px;
+}
+
+.entry-card label{
+  margin-bottom:9px;
+  font-size:12px;
+  letter-spacing:.02em;
+}
+
+.entry-card input{
+  height:60px;
+  border-radius:3px;
+  border:1.5px solid #cfd2d6;
+  background:#fafafa;
+  font-size:17px;
+  font-weight:650;
+}
+
+.entry-card input:focus{
+  border-color:var(--moca-border-strong);
+  box-shadow:0 0 0 2px rgba(36,37,38,.08);
+  background:#fff;
+}
+
+.btn{
+  border-radius:3px;
+  min-height:54px;
+}
+
+.btn-dark{
+  border:1.5px solid var(--ink);
+}
+
+.btn-dark:hover{
+  background:#111;
+}
+
+.btn-outline{
+  border:1.5px solid #cfd2d6;
+}
+
+.microcopy{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px dashed #d9dce0;
+  line-height:1.5;
+}
+
+/* QR 화면도 동일한 행사 시스템 톤으로 */
+.qr-card::before{
+  content:"ONLINE CHECK";
+  display:block;
+  width:max-content;
+  margin:0 0 18px auto;
+  color:#92969c;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.qr-box{
+  border:1px solid #e1e3e6;
+  background:#fff;
+}
+
+/* 게임 영역도 카드/키워드 버튼만 각지게 — 휴대폰 외형은 유지 */
+.keyword-panel{
+  border-radius:6px;
+  border:1.5px solid var(--moca-border-strong);
+  box-shadow:none;
+}
+
+.keyword-grid button{
+  border-radius:3px;
+  border:1px solid #d8dadd;
+  background:#fff;
+}
+
+.keyword-grid button.active{
+  border-color:var(--ink);
+}
+
+.complete-card{
+  border-radius:6px;
+  border:1.5px solid var(--moca-border-strong);
+  box-shadow:none;
+}
+
+.countdown{
+  border-radius:3px;
+}
+
+/* 태블릿에서도 첫 화면의 각진 비율 유지 */
+@media(max-width:820px){
+  .intro-surface,.qr-surface{
+    border-radius:5px;
+  }
+  .entry-card,.qr-card{
+    border-radius:4px;
+  }
+}
+
+@media(max-width:620px){
+  .web-surface{
+    border-radius:4px;
+  }
+  .intro-surface,.qr-surface{
+    padding:26px 18px;
+  }
+  .entry-card,.qr-card{
+    padding:25px 20px;
+  }
+  .keyword-panel{
+    border-radius:4px;
+  }
+}
