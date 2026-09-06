@@ -7,6 +7,7 @@ import {
   UserRound
 } from "lucide-react";
 import "./styles.css";
+import "./timer.css";
 import { checkOfflineEligibility, completeOfflineKeywordMatch } from "./offlineStore";
 
 const KEYWORDS = [
@@ -18,12 +19,13 @@ const KEYWORDS = [
   "이야기","계절감","색감","정성","취향"
 ];
 
+const TOTAL_CAFES = 3;
+const TOTAL_SECONDS = 60;
 const FEED_FILES = Array.from({ length: 12 }, (_, i) => `/assets/ig-photo-${i + 1}.jpg`);
-const CAFES = Array.from({ length: 6 }, (_, cafe) => ({
+const CAFES = Array.from({ length: TOTAL_CAFES }, (_, cafe) => ({
   id: cafe + 1,
   posts: Array.from({ length: 6 }, (_, i) => FEED_FILES[(i + cafe * 2) % FEED_FILES.length]),
 }));
-
 
 function LiveClock() {
   const getTime = () => new Intl.DateTimeFormat("ko-KR", {
@@ -123,7 +125,7 @@ function IntroScreen({ onSubmit }) {
         <div className="intro-copy">
           <p className="kicker">온라인 설문 다음 단계</p>
           <h1><span className="marker">피드만 보고</span><br/>골라주세요.</h1>
-          <p className="body-copy">6개 카페 피드를 차례로 보여드릴게요.</p>
+          <p className="body-copy">3개 카페 피드를 차례로 보여드릴게요. 총 60초 안에 골라주세요.</p>
         </div>
         <section className="entry-card">
           <p className="kicker">참여 확인</p>
@@ -213,10 +215,28 @@ function IphoneInstagram({ cafeIndex }) {
 
 function KeywordGame({ studentId, onComplete }) {
   const [cafeIndex,setCafeIndex] = useState(0);
-  const [answers,setAnswers] = useState(()=>Array.from({length:6},()=>[]));
+  const [answers,setAnswers] = useState(()=>Array.from({length:TOTAL_CAFES},()=>[]));
+  const [secondsLeft,setSecondsLeft] = useState(TOTAL_SECONDS);
   const selected = answers[cafeIndex];
   const [saving,setSaving] = useState(false);
   const [saveError,setSaveError] = useState("");
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setSecondsLeft(prev => {
+        if (prev <= 1) {
+          window.clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const timerPercent = (secondsLeft / TOTAL_SECONDS) * 100;
+  const timerState = secondsLeft === 0 ? "expired" : secondsLeft <= 15 ? "urgent" : "";
+
   const toggle = (keyword) => {
     setSaveError("");
     setAnswers(prev => {
@@ -236,7 +256,7 @@ function KeywordGame({ studentId, onComplete }) {
 
     setSaveError("");
 
-    if (cafeIndex < 5) {
+    if (cafeIndex < TOTAL_CAFES - 1) {
       setCafeIndex(v=>v+1);
       return;
     }
@@ -269,7 +289,16 @@ function KeywordGame({ studentId, onComplete }) {
   return (
     <main className="page-shell game-page">
       <GridBackground />
-      <AppHeader label="OFFLINE KEYWORD MATCH" badge={`${String(cafeIndex+1).padStart(2,'0')} / 06`} />
+      <AppHeader label="OFFLINE KEYWORD MATCH" badge={`총 ${TOTAL_CAFES}단계 · ${cafeIndex+1} / ${TOTAL_CAFES}`} />
+      <section className={`game-timer ${timerState}`} aria-live="polite">
+        <div className="game-timer-copy">
+          <span>{secondsLeft === 0 ? "시간이 지났어요. 현재 선택을 마무리해주세요." : `총 ${TOTAL_CAFES}단계 · 60초 안에 완료해주세요.`}</span>
+          <strong>{secondsLeft === 0 ? "시간 초과" : `${secondsLeft}초`}</strong>
+        </div>
+        <div className="game-timer-track" aria-hidden="true">
+          <span className="game-timer-fill" style={{width:`${timerPercent}%`}} />
+        </div>
+      </section>
       <section className="game-layout">
         <IphoneInstagram cafeIndex={cafeIndex}/>
         <section className="keyword-panel">
@@ -287,7 +316,7 @@ function KeywordGame({ studentId, onComplete }) {
           {saveError && <p className="save-error">{saveError}</p>}
           <div className="panel-actions">
             <button className="btn btn-outline" onClick={reset} disabled={saving}><RefreshCw size={16}/> 다시 고르기</button>
-            <button className="btn btn-dark" onClick={next} disabled={saving || selected.length !== 3}>{saving ? "저장 중..." : <>{cafeIndex===5?"완료":"다음 카페"} <ArrowRight size={16}/></>}</button>
+            <button className="btn btn-dark" onClick={next} disabled={saving || selected.length !== 3}>{saving ? "저장 중..." : <>{cafeIndex===TOTAL_CAFES-1?"완료":"다음 카페"} <ArrowRight size={16}/></>}</button>
           </div>
         </section>
       </section>
