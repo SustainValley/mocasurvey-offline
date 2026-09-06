@@ -1,0 +1,78 @@
+.game-timer{
+  position:relative;
+  z-index:4;
+  width:min(1240px,100%);
+  margin:14px auto 0;
+  padding:10px 14px 11px;
+  border:1px solid #e5e7ea;
+  border-radius:14px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 6px 18px rgba(0,0,0,.025);
+}
+.game-timer-copy{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:8px;
+  color:#6f7378;
+  font-size:12px;
+  font-weight:700;
+}
+.game-timer-copy strong{
+  color:#242526;
+  font-size:14px;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.game-timer-track{
+  width:100%;
+  height:6px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#eceef0;
+}
+.game-timer-fill{
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:#242526;
+  transition:width .95s linear, background-color .2s ease;
+}
+.game-timer.urgent .game-timer-copy strong{
+  color:#b85d88;
+}
+.game-timer.urgent .game-timer-fill{
+  background:#d96f9f;
+}
+.game-timer.expired{
+  border-color:#efc1d6;
+  background:#fff8fb;
+}
+.game-timer.expired .game-timer-copy{
+  color:#8d4e6b;
+}
+.game-timer.expired .game-timer-copy strong{
+  color:#b85d88;
+}
+
+@media(max-width:1280px){
+  .game-timer{width:min(1120px,100%)}
+}
+
+@media(max-width:1024px){
+  .game-timer{
+    width:100%;
+    margin-top:10px;
+    padding:9px 12px 10px;
+  }
+  .game-timer-copy{
+    margin-bottom:7px;
+    font-size:11px;
+  }
+  .game-timer-copy strong{font-size:13px}
+}
+
+@media(max-width:560px){
+  .game-timer-copy span{max-width:75%;line-height:1.35}
+}
