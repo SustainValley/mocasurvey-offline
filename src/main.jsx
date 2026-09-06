@@ -290,18 +290,18 @@ function KeywordGame({ studentId, onComplete }) {
     <main className="page-shell game-page">
       <GridBackground />
       <AppHeader label="OFFLINE KEYWORD MATCH" badge={`총 ${TOTAL_CAFES}단계 · ${cafeIndex+1} / ${TOTAL_CAFES}`} />
-      <section className={`game-timer ${timerState}`} aria-live="polite">
-        <div className="game-timer-copy">
-          <span>{secondsLeft === 0 ? "시간이 지났어요. 현재 선택을 마무리해주세요." : `총 ${TOTAL_CAFES}단계 · 60초 안에 완료해주세요.`}</span>
-          <strong>{secondsLeft === 0 ? "시간 초과" : `${secondsLeft}초`}</strong>
-        </div>
-        <div className="game-timer-track" aria-hidden="true">
-          <span className="game-timer-fill" style={{width:`${timerPercent}%`}} />
-        </div>
-      </section>
       <section className="game-layout">
         <IphoneInstagram cafeIndex={cafeIndex}/>
         <section className="keyword-panel">
+          <section className={`game-timer ${timerState}`} aria-live="polite">
+            <div className="game-timer-copy">
+              <span>{secondsLeft === 0 ? "시간이 지났어요. 현재 선택을 마무리해주세요." : `총 ${TOTAL_CAFES}단계 · 60초 안에 완료해주세요.`}</span>
+              <strong>{secondsLeft === 0 ? "시간 초과" : `${secondsLeft}초`}</strong>
+            </div>
+            <div className="game-timer-track" aria-hidden="true">
+              <span className="game-timer-fill" style={{width:`${timerPercent}%`}} />
+            </div>
+          </section>
           <div className="panel-top">
             <div>
               <h1>이 피드에서 어떤 느낌이 드나요?</h1>
