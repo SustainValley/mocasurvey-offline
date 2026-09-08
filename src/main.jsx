@@ -9,23 +9,8 @@ import {
 import "./styles.css";
 import "./timer.css";
 import { checkOfflineEligibility, completeOfflineKeywordMatch } from "./offlineStore";
+import { CAFES, KEYWORDS, TOTAL_CAFES, TOTAL_SECONDS } from "./offlineConfig";
 
-const KEYWORDS = [
-  "따뜻한","차분한","감성적인","전문적인","정갈한",
-  "아늑한","트렌디한","친근한","미니멀한","고급스러운",
-  "빈티지한","힙한","자연스러운","선명한","부드러운",
-  "로컬한","세련된","편안한","개성있는","담백한",
-  "신뢰감","장인정신","디저트","커피중심","공간중심",
-  "이야기","계절감","색감","정성","취향"
-];
-
-const TOTAL_CAFES = 3;
-const TOTAL_SECONDS = 60;
-const FEED_FILES = Array.from({ length: 12 }, (_, i) => `/assets/ig-photo-${i + 1}.jpg`);
-const CAFES = Array.from({ length: TOTAL_CAFES }, (_, cafe) => ({
-  id: cafe + 1,
-  posts: Array.from({ length: 6 }, (_, i) => FEED_FILES[(i + cafe * 2) % FEED_FILES.length]),
-}));
 
 function LiveClock() {
   const getTime = () => new Intl.DateTimeFormat("ko-KR", {
@@ -198,7 +183,7 @@ function IphoneInstagram({ cafeIndex }) {
           </div>
 
           <div className="ig-grid">
-            {cafe.posts.map((src, i) => <div className="ig-tile" key={i}><img src={src} alt="" /></div>)}
+            {cafe.posts.map((src, i) => <div className="ig-tile" key={i}><img src={src} alt="" loading="eager" decoding="async" /></div>)}
           </div>
 
           <div className="ig-spacer" />

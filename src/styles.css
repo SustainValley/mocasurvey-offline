@@ -1020,3 +1020,45 @@ body{
     border-radius:4px;
   }
 }
+
+
+/* FINAL-45-KEYWORD-LAYOUT */
+/* 45개 후보를 5열 × 9행으로 안정적으로 보여주고, 작은 화면에서는 패널 내부만 스크롤합니다. */
+.keyword-panel{
+  height:min(740px,calc(100svh - 138px));
+  min-height:620px;
+  padding:30px 34px 24px;
+}
+.panel-rule{margin:20px 0 22px}
+.keyword-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:7px 9px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  padding:1px 3px 1px 0;
+}
+.keyword-grid button{
+  min-width:0;
+  height:38px;
+  padding:0 5px;
+  border-radius:10px;
+  font-size:12px;
+  white-space:nowrap;
+}
+.panel-actions{margin-top:16px}
+
+@media(max-width:1280px){
+  .keyword-panel{height:min(700px,calc(100svh - 132px));min-height:570px;padding:24px 26px 22px}
+  .panel-top h1{font-size:27px}
+  .panel-rule{margin:16px 0 17px}
+  .keyword-grid{gap:6px 7px}
+  .keyword-grid button{height:34px;font-size:11.5px}
+  .panel-actions{margin-top:13px}
+}
+
+@media(max-width:1024px){
+  .keyword-panel{height:min(640px,calc(100svh - 126px));min-height:530px;padding:20px}
+  .keyword-grid{gap:5px 6px}
+  .keyword-grid button{height:32px;font-size:10.5px;padding-inline:3px}
+}
