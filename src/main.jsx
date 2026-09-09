@@ -9,7 +9,7 @@ import {
 import "./styles.css";
 import "./timer.css";
 import { checkOfflineEligibility, completeOfflineKeywordMatch } from "./offlineStore";
-import { CAFES, KEYWORDS, TOTAL_CAFES, TOTAL_SECONDS } from "./offlineConfig";
+import { CAFES, KEYWORDS, TOTAL_CAFES, TOTAL_SECONDS, scoreKeywordAnswers } from "./offlineConfig";
 
 
 function LiveClock() {
@@ -251,7 +251,7 @@ function KeywordGame({ studentId, onComplete }) {
     try {
       const result = await completeOfflineKeywordMatch(studentId, answers);
       if (result?.status === "completed") {
-        onComplete();
+        onComplete(scoreKeywordAnswers(answers));
         return;
       }
       if (result?.status === "already_participated") {
@@ -309,24 +309,50 @@ function KeywordGame({ studentId, onComplete }) {
   );
 }
 
-function CompleteScreen({ onRestart }) {
-  const [seconds,setSeconds] = useState(3);
+function CompleteScreen({ result, onRestart }) {
+  const [seconds,setSeconds] = useState(8);
+  const safeResult = result || { correctCount: 0, totalCorrect: 9, accuracy: 0, byCafe: [] };
+
   useEffect(()=>{
     const tick=setInterval(()=>setSeconds(s=>Math.max(0,s-1)),1000);
-    const done=setTimeout(onRestart,3000);
+    const done=setTimeout(onRestart,8000);
     return()=>{clearInterval(tick);clearTimeout(done)};
   },[onRestart]);
+
   return (
     <main className="page-shell">
       <GridBackground />
       <AppHeader label="OFFLINE KEYWORD MATCH" />
-      <section className="complete-wrap">
+      <section className="complete-wrap result-complete-wrap">
         <FallingBeans density="light" />
-        <div className="complete-card">
+        <div className="complete-card result-card">
           <div className="check-circle"><Check size={38} strokeWidth={3}/></div>
           <p className="kicker">완료</p>
-          <h1>키워드 선택 완료</h1>
-          <p>응답이 저장됐어요.</p>
+          <h1>키워드 매칭 결과</h1>
+          <p>총 9개의 정답 키워드 중 맞힌 개수예요.</p>
+
+          <div className="score-summary" aria-label={`정답 ${safeResult.correctCount}개, 정답률 ${safeResult.accuracy}%`}>
+            <div className="score-count-box">
+              <span className="score-label">맞힌 키워드</span>
+              <strong>{safeResult.correctCount}<small> / {safeResult.totalCorrect}개</small></strong>
+            </div>
+            <div className="score-rate-box">
+              <span className="score-label">정답률</span>
+              <strong>{safeResult.accuracy}<small>%</small></strong>
+            </div>
+          </div>
+
+          <div className="cafe-score-grid">
+            {(safeResult.byCafe || []).map((cafe) => (
+              <div className="cafe-score-item" key={cafe.cafeId}>
+                <span>카페 {cafe.cafeId}</span>
+                <strong>{cafe.correctCount} / {cafe.total}</strong>
+              </div>
+            ))}
+          </div>
+
+          <p className="result-note">정답 키워드는 다음 참여자를 위해 공개하지 않아요.</p>
+          <button className="btn btn-dark result-restart" onClick={onRestart}>처음 화면으로</button>
           <div className="countdown">{seconds}초 후 처음 화면으로 돌아갑니다.</div>
         </div>
       </section>
@@ -337,6 +363,7 @@ function CompleteScreen({ onRestart }) {
 function App() {
   const [screen,setScreen] = useState("intro");
   const [studentId,setStudentId] = useState("");
+  const [resultSummary,setResultSummary] = useState(null);
 
   const handleEligibility = (id, nextScreen) => {
     setStudentId(id);
@@ -345,13 +372,14 @@ function App() {
 
   const restart = () => {
     setStudentId("");
+    setResultSummary(null);
     setScreen("intro");
   };
 
   if (screen==="intro") return <IntroScreen onSubmit={handleEligibility}/>;
   if (screen==="qr") return <QRScreen onRetry={restart}/>;
-  if (screen==="game") return <KeywordGame studentId={studentId} onComplete={()=>setScreen("done")}/>;
-  return <CompleteScreen onRestart={restart}/>;
+  if (screen==="game") return <KeywordGame studentId={studentId} onComplete={(summary)=>{ setResultSummary(summary); setScreen("done"); }}/>;
+  return <CompleteScreen result={resultSummary} onRestart={restart}/>;
 }
 
 createRoot(document.getElementById("root")).render(<App/>);
