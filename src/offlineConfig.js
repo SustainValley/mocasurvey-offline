@@ -1,30 +1,35 @@
 export const TOTAL_CAFES = 3;
 export const POSTS_PER_CAFE = 6;
 export const TOTAL_SECONDS = 60;
-export const CORRECT_KEYWORDS_PER_CAFE = 3;
-export const TOTAL_CORRECT_KEYWORDS = TOTAL_CAFES * CORRECT_KEYWORDS_PER_CAFE;
+export const SELECTIONS_PER_CAFE = 3;
+export const ANSWER_KEYS_PER_CAFE = 4;
+export const TOTAL_SCORE = TOTAL_CAFES * SELECTIONS_PER_CAFE;
 
-// 카페별 정답 키워드입니다. 정답을 바꿀 때는 이 객체만 수정하면 됩니다.
-export const CORRECT_KEYWORDS = Object.freeze({
-  1: Object.freeze(["따뜻한", "아늑한", "친근한"]),
-  2: Object.freeze(["커피중심", "장인정신", "자연스러운"]),
-  3: Object.freeze(["디저트", "트렌디한", "감성적인"]),
+export const CAFE_NAMES = Object.freeze({
+  1: "아카시아",
+  2: "서재의잔",
+  3: "카페 스너들",
 });
 
-// 정답 9개 + 혼동용 키워드 18개 = 총 27개입니다.
-// 배열 순서는 참가자 화면에서 보이는 순서이므로 정답이 한곳에 몰리지 않게 섞어둡니다.
+// 카페별 정답 키 4개 중 참가자가 고른 3개가 모두 포함되면 카페 만점(3/3)입니다.
+export const CORRECT_KEYWORDS = Object.freeze({
+  1: Object.freeze(["전문적인", "따뜻한", "로스터리", "핸드드립"]),
+  2: Object.freeze(["고요한", "지적인", "어른스러운", "잔잔한"]),
+  3: Object.freeze(["포근한", "친근한", "사랑스러운", "디저트 맛집"]),
+});
+
+// 세 카페에서 공통으로 사용하는 후보 27개입니다.
+// 정답군 12개 + 오답/혼동 키워드 15개.
 export const KEYWORDS = Object.freeze([
-  "차분한", "따뜻한", "전문적인", "디저트", "미니멀한",
-  "트렌디한", "고급스러운", "아늑한", "빈티지한",
-  "커피중심", "힙한", "자연스러운", "선명한", "친근한",
-  "부드러운", "로컬한", "장인정신", "세련된",
-  "감성적인", "편안한", "개성있는", "담백한",
-  "신뢰감", "공간중심", "이야기", "계절감", "색감",
+  "전문적인", "트렌디한", "고요한", "화려한", "포근한", "로스터리", "지적인", "럭셔리한", "친근한",
+  "핸드드립", "강렬한", "어른스러운", "루프탑", "사랑스러운", "인더스트리얼한", "따뜻한", "네온사인", "잔잔한",
+  "도회적인", "디저트 맛집", "브런치", "시크한", "포토존", "대형카페", "힙한", "라이브 공연", "키즈존",
 ]);
 
 export const CAFES = Object.freeze(
   Array.from({ length: TOTAL_CAFES }, (_, cafeIndex) => ({
     id: cafeIndex + 1,
+    name: CAFE_NAMES[cafeIndex + 1],
     posts: Array.from(
       { length: POSTS_PER_CAFE },
       (_, postIndex) => `/offline-feeds/cafe-${String(cafeIndex + 1).padStart(2, '0')}/post-${String(postIndex + 1).padStart(2, '0')}.webp`,
@@ -41,19 +46,20 @@ export function scoreKeywordAnswers(answers = []) {
 
     return {
       cafeId,
+      cafeName: CAFE_NAMES[cafeId],
       correctCount,
-      total: CORRECT_KEYWORDS_PER_CAFE,
+      total: SELECTIONS_PER_CAFE,
     };
   });
 
   const correctCount = byCafe.reduce((sum, cafe) => sum + cafe.correctCount, 0);
-  const accuracy = TOTAL_CORRECT_KEYWORDS
-    ? Math.round((correctCount / TOTAL_CORRECT_KEYWORDS) * 100)
+  const accuracy = TOTAL_SCORE
+    ? Math.round((correctCount / TOTAL_SCORE) * 100)
     : 0;
 
   return {
     correctCount,
-    totalCorrect: TOTAL_CORRECT_KEYWORDS,
+    totalCorrect: TOTAL_SCORE,
     accuracy,
     byCafe,
   };
@@ -65,16 +71,16 @@ if (KEYWORDS.length !== 27 || new Set(KEYWORDS).size !== 27) {
   throw new Error(`Offline keyword configuration must contain exactly 27 unique keywords. Current: ${KEYWORDS.length}`);
 }
 
-if (uniqueCorrectKeywords.size !== TOTAL_CORRECT_KEYWORDS) {
-  throw new Error('Cafe answer keys must contain 9 unique correct keywords.');
+if (uniqueCorrectKeywords.size !== TOTAL_CAFES * ANSWER_KEYS_PER_CAFE) {
+  throw new Error('Cafe answer keys must contain exactly 12 unique correct keywords.');
 }
 
 if ([...uniqueCorrectKeywords].some((keyword) => !KEYWORDS.includes(keyword))) {
   throw new Error('Every correct keyword must exist in the 27-keyword option list.');
 }
 
-if (Object.values(CORRECT_KEYWORDS).some((keywords) => keywords.length !== CORRECT_KEYWORDS_PER_CAFE)) {
-  throw new Error('Each cafe must have exactly 3 correct keywords.');
+if (Object.values(CORRECT_KEYWORDS).some((keywords) => keywords.length !== ANSWER_KEYS_PER_CAFE)) {
+  throw new Error('Each cafe must have exactly 4 answer-key keywords.');
 }
 
 if (CAFES.length !== TOTAL_CAFES || CAFES.some((cafe) => cafe.posts.length !== POSTS_PER_CAFE)) {
