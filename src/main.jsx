@@ -351,7 +351,6 @@ function CompleteScreen({ result, onRestart }) {
             ))}
           </div>
 
-          <p className="result-note">각 카페는 정답 키 4개 중 어떤 3개를 골라도 만점이에요. 정답 키 자체는 다음 참여자를 위해 공개하지 않아요.</p>
           <button className="btn btn-dark result-restart" onClick={onRestart}>처음 화면으로</button>
           <div className="countdown">{seconds}초 후 처음 화면으로 돌아갑니다.</div>
         </div>
