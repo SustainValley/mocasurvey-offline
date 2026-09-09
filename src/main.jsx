@@ -274,7 +274,7 @@ function KeywordGame({ studentId, onComplete }) {
   return (
     <main className="page-shell game-page">
       <GridBackground />
-      <AppHeader label="OFFLINE KEYWORD MATCH" badge={`총 ${TOTAL_CAFES}단계 · ${cafeIndex+1} / ${TOTAL_CAFES}`} />
+      <AppHeader label="OFFLINE KEYWORD MATCH" badge={`${CAFES[cafeIndex]?.name || `카페 ${cafeIndex+1}`} · ${cafeIndex+1} / ${TOTAL_CAFES}`} />
       <section className="game-layout">
         <IphoneInstagram cafeIndex={cafeIndex}/>
         <section className="keyword-panel">
@@ -329,7 +329,7 @@ function CompleteScreen({ result, onRestart }) {
           <div className="check-circle"><Check size={38} strokeWidth={3}/></div>
           <p className="kicker">완료</p>
           <h1>키워드 매칭 결과</h1>
-          <p>총 9개의 정답 키워드 중 맞힌 개수예요.</p>
+          <p>선택한 9개의 키워드 중 카페별 정답 키와 일치한 개수예요.</p>
 
           <div className="score-summary" aria-label={`정답 ${safeResult.correctCount}개, 정답률 ${safeResult.accuracy}%`}>
             <div className="score-count-box">
@@ -345,13 +345,13 @@ function CompleteScreen({ result, onRestart }) {
           <div className="cafe-score-grid">
             {(safeResult.byCafe || []).map((cafe) => (
               <div className="cafe-score-item" key={cafe.cafeId}>
-                <span>카페 {cafe.cafeId}</span>
+                <span>{cafe.cafeName || `카페 ${cafe.cafeId}`}</span>
                 <strong>{cafe.correctCount} / {cafe.total}</strong>
               </div>
             ))}
           </div>
 
-          <p className="result-note">정답 키워드는 다음 참여자를 위해 공개하지 않아요.</p>
+          <p className="result-note">각 카페는 정답 키 4개 중 어떤 3개를 골라도 만점이에요. 정답 키 자체는 다음 참여자를 위해 공개하지 않아요.</p>
           <button className="btn btn-dark result-restart" onClick={onRestart}>처음 화면으로</button>
           <div className="countdown">{seconds}초 후 처음 화면으로 돌아갑니다.</div>
         </div>
