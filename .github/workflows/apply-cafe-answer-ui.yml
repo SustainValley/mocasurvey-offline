@@ -1,0 +1,36 @@
+name: Apply cafe answer UI patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-cafe-answer-ui.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply UI patch
+        run: python .github/patch-cafe-answer-ui.py
+
+      - name: Build verification
+        run: |
+          npm ci
+          npm run build
+
+      - name: Commit final UI and clean temp files
+        run: |
+          rm .github/patch-cafe-answer-ui.py .github/workflows/apply-cafe-answer-ui.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/main.jsx .github/patch-cafe-answer-ui.py .github/workflows/apply-cafe-answer-ui.yml
+          git commit -m "feat: apply four-key cafe answer scoring UI"
+          git push origin main
